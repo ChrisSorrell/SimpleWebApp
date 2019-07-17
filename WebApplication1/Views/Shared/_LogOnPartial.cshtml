@@ -1,0 +1,51 @@
+﻿<div id="login-container">
+    
+    @if (Session["User"] != null)
+    {
+        <span id="welcomeText">Welcome @Session["User"]</span>
+        <button id="logoutBtn">Sign Out</button>
+    }
+    else
+    {
+        <input type="text" name="username" id="username" class="textField" placeholder="Username" required="required" />
+        <input type="password" name="password" id="password" class="textField" placeholder="Password" required="required" />
+        <button id="loginBtn">Sign in</button>
+    }
+        <div id="notification" style=" display:none;"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        $("#loginBtn").click(function () {
+            $.ajax({
+                url: '/Account/Logon',
+                type: 'post',
+                data: { username: $("#username").val(), password: $("#password").val() },
+                success: function (data) {
+                    if (data.Success) {
+                        location.reload(); 
+                    } else {
+                        $("#notification").html("*Username and Password are incorrect").fadeIn(500);
+                    }
+                }
+            });
+        });
+
+        $("#logoutBtn").click(function () {
+            $.ajax({
+                url: '/Account/LogOff',
+                type: 'post',
+                success: function (data) {
+                    if (data.Success) {
+                        location.reload(); 
+                    } else {
+                        $("#notification").html("*An error occurred").fadeIn(500).fadeOut(5000);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
